@@ -18,16 +18,16 @@ data2$Sub_metering_2 <- with(data2, as.numeric(Sub_metering_2))
 data2$Sub_metering_3 <- with(data2, as.numeric(Sub_metering_3))
 
 # Creating a new column for data2 by concatenating Date and Time columns
-data2$Datetime <-paste(data2$Date, data2$Time)
+data2$Datetime <- strptime(paste(data2$Date, data2$Time), "%d/%m/%Y %H:%M:%S")
 
 # Calling png() function to create a graphics device for PNG format bitmap files
 png("plot3.png", 480, 480)
 
 # Calling plot() function to create a line plot for Energy sub-metering1 against the Time period and
 # then annotating the additional lines for Energy sub-metering2 and Energy sub-metering3
-plot(strptime(data2$Datetime, "%d/%m/%Y %H:%M:%S"), data2$Sub_metering_1, col = "black", type = "l", xlab = "", ylab = "Energy sub-metring")
-lines(strptime(data2$Datetime, "%d/%m/%Y %H:%M:%S"), data2$Sub_metering_2, col = "red", type = "l")
-lines(strptime(data2$Datetime, "%d/%m/%Y %H:%M:%S"), data2$Sub_metering_3, col = "blue", type = "l")
+plot(data2$Datetime, data2$Sub_metering_1, col = "black", type = "l", xlab = "", ylab = "Energy sub-metring")
+lines(data2$Datetime, data2$Sub_metering_2, col = "red", type = "l")
+lines(data2$Datetime, data2$Sub_metering_3, col = "blue", type = "l")
 
 # Annotating Legend to the current plot
 legend("topright", legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), col = c("black", "red", "blue"), lty = 1, border = "black")
