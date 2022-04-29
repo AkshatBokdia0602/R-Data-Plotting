@@ -1,21 +1,41 @@
+# Program 4 to plot multiple plots on the same screen device
+# using the base plotting system (graphics Package) and push the graph to a png file.
+
+# Creating a Specific Directory for this Assignment
+if (!file.exists("R_Data_Plotting"))
+  dir.create("R_Data_Plotting")
+
+# Moving the Zip file to the above Directory and unzipping it
+file.copy("~/Downloads/exdata_data_household_power_consumption.zip", "~/R_Data_Plotting")
+setwd("~/R_Data_Plotting")
+unzip("exdata_data_household_power_consumption.zip")
+
+# Reading the input data and subsetting the required data (data between the 2 days - 01/02/2007 and 02/02/2007)
 data <- read.table("household_power_consumption.txt", header = TRUE, sep = ";", na.strings = "?")
 data2 <- subset(data, data$Date == "1/2/2007"|data$Date == "2/2/2007")
-data2$Datetime <-paste(data2$Date, data2$Time)
-data2$Date <- as.Date(data2$Date, "%d/%m/%Y")
-data2$Time <- strptime(data2$Time, "%T")
 data2$Global_active_power <- with(data2, as.numeric(Global_active_power))
 data2$Global_reactive_power <- with(data2, as.numeric(Global_reactive_power))
 data2$Voltage <- with(data2, as.numeric(Voltage))
 data2$Sub_metering_1 <- with(data2, as.numeric(Sub_metering_1))
 data2$Sub_metering_2 <- with(data2, as.numeric(Sub_metering_2))
 data2$Sub_metering_3 <- with(data2, as.numeric(Sub_metering_3))
+
+# Creating a new column for data2 by concatenating Date and Time columns
+data2$Datetime <- strptime(paste(data2$Date, data2$Time), "%d/%m/%Y %H:%M:%S")
+
+# Calling png() function to create a graphics device for PNG format bitmap files
 png("plot4.png", 480, 480)
+
+# Setting the global parameter for plotting
 par(mfcol = c(2,2))
-plot(strptime(data2$Datetime, "%d/%m/%Y %H:%M:%S"), data2$Global_active_power, type = "l", xlab = "", ylab = "Global Active Power")
-plot(strptime(data2$Datetime, "%d/%m/%Y %H:%M:%S"), data2$Sub_metering_1, col = "black", type = "l", xlab = "", ylab = "Energy sub-metring")
-lines(strptime(data2$Datetime, "%d/%m/%Y %H:%M:%S"), data2$Sub_metering_2, col = "red", type = "l")
-lines(strptime(data2$Datetime, "%d/%m/%Y %H:%M:%S"), data2$Sub_metering_3, col = "blue", type = "l")
+
+# Creating multiple plots
+plot(data2$Datetime, data2$Global_active_power, type = "l", xlab = "", ylab = "Global Active Power")
+plot(data2$Datetime, data2$Sub_metering_1, col = "black", type = "l", xlab = "", ylab = "Energy sub-metring")
+lines(data2$Datetime, data2$Sub_metering_2, col = "red", type = "l")
+lines(data2$Datetime, data2$Sub_metering_3, col = "blue", type = "l")
 legend("topright", legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), col = c("black", "red", "blue"), lty = 1, border = "black")
-plot(strptime(data2$Datetime, "%d/%m/%Y %H:%M:%S"), data2$Voltage, type = "l", xlab = "datetime", ylab = "Voltage")
-plot(strptime(data2$Datetime, "%d/%m/%Y %H:%M:%S"), data2$Global_reactive_power, type = "l", xlab = "datetime", ylab = "Global_reactive_power")
+plot(data2$Datetime, data2$Voltage, type = "l", xlab = "datetime", ylab = "Voltage")
+plot(data2$Datetime, data2$Global_reactive_power, type = "l", xlab = "datetime", ylab = "Global_reactive_power")
+
 dev.off()
