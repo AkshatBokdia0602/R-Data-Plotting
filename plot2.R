@@ -21,7 +21,7 @@ data2$Datetime <- strptime(paste(data2$Date, data2$Time), "%d/%m/%Y %H:%M:%S")
 # Calling png() function to create a graphics device for PNG format bitmap files
 png("plot2.png", 480, 480)
 
-# Calling plot() function to create a line plot for Global Active Power against the Time peroid
+# Calling plot() function to create a line plot for Global Active Power against the Time period
 plot(data2$Datetime, data2$Global_active_power, type = "l", xlab = "", ylab = "Global Active Power(Kilowatts)")
 
 dev.off()
